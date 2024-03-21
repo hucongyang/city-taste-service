@@ -3,6 +3,7 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/hucongyang/city-taste-service/pkg/setting"
+	v1 "github.com/hucongyang/city-taste-service/routers/api/v1"
 )
 
 func InitRouter() *gin.Engine {
@@ -19,6 +20,13 @@ func InitRouter() *gin.Engine {
 			"message": "test1",
 		})
 	})
+
+	apiv1 := router.Group("/api/v1")
+	{
+		// 获取文章列表
+		apiv1.GET("/articles", v1.GetArticles)
+		
+	}
 
 	return router
 }
