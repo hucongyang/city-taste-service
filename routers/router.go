@@ -25,7 +25,14 @@ func InitRouter() *gin.Engine {
 	{
 		// 获取文章列表
 		apiv1.GET("/articles", v1.GetArticles)
-		
+		// 获取指定文章
+		apiv1.GET("/articles/:id", v1.GetArticle)
+
+		// 获取up列表
+		apiv1.GET("/ups", v1.GetUps)
+		// 获取指定up
+		apiv1.GET("/ups/:id", v1.GetUp)
+
 	}
 
 	return router

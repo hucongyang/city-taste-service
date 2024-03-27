@@ -1,7 +1,5 @@
 package v1
 
-// 文章相关路由
-
 import (
 	"log"
 	"net/http"
@@ -15,8 +13,8 @@ import (
 	"github.com/unknwon/com"
 )
 
-// 获取多个文章
-func GetArticles(c *gin.Context) {
+// 获取up主列表
+func GetUps(c *gin.Context) {
 	maps := make(map[string]interface{})
 	data := make(map[string]interface{})
 	valid := validation.Validation{}
@@ -28,19 +26,16 @@ func GetArticles(c *gin.Context) {
 		valid.Range(state, 0, 1, "state").Message("状态只允许0或1")
 	}
 
-	var upId int = -1
-	if arg := c.Query("upId"); arg != "" {
-		upId = com.StrTo(arg).MustInt()
-		maps["upId"] = upId
-		valid.Min(upId, 1, "upId").Message("标签ID必须大于0")
+	name := c.Query("name")
+	if name != "" {
+		maps["name"] = name
 	}
 
 	code := e.INVALID_PARAMS
 	if !valid.HasErrors() {
 		code = e.SUCCESS
-
-		data["list"] = models.GetArticles(util.GetPage(c), setting.PageSize, maps)
-		data["total"] = models.GetArticleTotal(maps)
+		data["list"] = models.GetUps(util.GetPage(c), setting.PageSize, maps)
+		data["total"] = models.GetUpTotal(maps)
 	} else {
 		for _, err := range valid.Errors {
 			log.Printf("err.key: %s, err.message: %s", err.Key, err.Message)
@@ -52,10 +47,11 @@ func GetArticles(c *gin.Context) {
 		"msg": e.GetMsg(code),
 		"data": data,
 	})
+
 }
 
-// 获取单个文章
-func GetArticle(c *gin.Context) {
+// 获取单个up
+func GetUp(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
 
 	valid := validation.Validation{}
@@ -64,11 +60,11 @@ func GetArticle(c *gin.Context) {
 	code := e.INVALID_PARAMS
 	var data interface{}
 	if !valid.HasErrors() {
-		if models.ExistArticleByID(id) {
-			data = models.GetArticle(id)
+		if models.ExistUpByID(id) {
+			data = models.GetUp(id)
 			code = e.SUCCESS
 		} else {
-			code = e.ERROR_NOT_EXIST_ARTICLE
+			code = e.ERROR_NOT_EXIST_UP
 		}
 	} else {
 		for _, err := range valid.Errors {
@@ -83,17 +79,18 @@ func GetArticle(c *gin.Context) {
 	})
 }
 
-// 新增文章
-func AddArticle(c *gin.Context) {
+
+// 新增up
+func AddUp(c *gin.Context) {
 
 }
 
-// 修改文章
-func EditArticle(c *gin.Context) {
+// 修改up
+func EditUp(c *gin.Context) {
 
 }
 
-// 删除文章
-func DeleteTag(c *gin.Context) {
-
+// 删除up
+func DeleteUp(c *gin.Context) {
+	
 }
